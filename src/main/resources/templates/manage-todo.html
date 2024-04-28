@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo List</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Include Bootstrap JavaScript and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Include Disney-style font -->
+    <link href="https://fonts.googleapis.com/css2?family=Walt+Disney&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Walt Disney', sans-serif; /* Disney-style font */
+            background: midnightblue;
+        }
+        .table-shadow {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Shadow effect */
+        }
+        /* Customize buttons */
+        .btn {
+            font-family: 'Walt Disney', sans-serif; /* Disney-style font */
+            /*background-color: #FFD700; !* Gold color like Disney's castle *!*/
+            /*border-color: #FFD700; !* Border color same as background for Disney buttons *!*/
+            border-radius: 35px; /* Rounded corners */
+        }
+        .btn-primary:hover {
+            background-color: lightcoral; /* Light orange on hover */
+            border-color: lightcoral; /* Light orange border on hover */
+        }
+
+    </style>
+</head>
+<body>
+
+<section class="vh-100 gradient-custom">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-xl-10">
+
+                <div class="card">
+                    <div class="card-body p-5">
+                        <form th:action="@{/add-todo}" method="post" class="row m-2 ">
+                                    <input type="text" class="form-control col-3" id="title" placeholder="Title" name="title" required>
+                                    <input type="text" class="form-control col-6 mx-2" id="description" placeholder=" description" name="description" required></input>
+                                <button type="submit" class="btn btn-primary ">Add Todo</button>
+                        </form>
+                        <ul class="nav nav-tabs mb-4 pb-2" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a aria-controls="profile" aria-selected="true" class="nav-link active" data-toggle="tab" href="#profile" id="profile-tab"
+                                   of="tab" role>Active</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a aria-controls="security" aria-selected="false" class="nav-link" data-toggle="tab" href="#security" id="security-tab"
+                                   role="tab">Completed</a>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content align-self-center" id="myTabContent">
+                            <div aria-labelledby="profile-tab" class="tab-pane fade show active ml=-2" id="profile" role="tabpanel">
+                                <div class="card " th:each="todo : ${todoList}" th:if="${!todo.completed}">
+                                    <div class="card-header">
+                                        <span>
+                                    <a th:href="@{/completed/{id}(id=${todo.id})}" class="checkbox-link mx-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 100 100"
+                                             style="fill:#228BE6;">
+                                            <rect x="10" y="10" width="80" height="80" rx="15" ry="15" stroke="#000" stroke-width="3" fill="none"/>
+                                            <!-- Checkmark path -->
+                                            <path d="M 20,55 L 40,75 L 80,25" fill="none" stroke="#FFF" stroke-width="8"/>
+                                        </svg>
+                                    </a>
+                                            </span>
+
+                                        <span><strong th:text="${todo.title}"></strong></span>
+
+
+                                    <a th:href="@{/delete/{id}(id=${todo.id})}" class="btn p-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" viewBox="0 0 30 30"
+                                             style="fill:#151546;">
+    <path d="M 7 4 C 6.744125 4 6.4879687 4.0974687 6.2929688 4.2929688 L 4.2929688 6.2929688 C 3.9019687 6.6839688 3.9019687 7.3170313 4.2929688 7.7070312 L 11.585938 15 L 4.2929688 22.292969 C 3.9019687 22.683969 3.9019687 23.317031 4.2929688 23.707031 L 6.2929688 25.707031 C 6.6839688 26.098031 7.3170313 26.098031 7.7070312 25.707031 L 15 18.414062 L 22.292969 25.707031 C 22.682969 26.098031 23.317031 26.098031 23.707031 25.707031 L 25.707031 23.707031 C 26.098031 23.316031 26.098031 22.682969 25.707031 22.292969 L 18.414062 15 L 25.707031 7.7070312 C 26.098031 7.3170312 26.098031 6.6829688 25.707031 6.2929688 L 23.707031 4.2929688 C 23.316031 3.9019687 22.682969 3.9019687 22.292969 4.2929688 L 15 11.585938 L 7.7070312 4.2929688 C 7.5115312 4.0974687 7.255875 4 7 4 z"></path>
+</svg>
+                                    </a>
+
+                                    <div class="card-body">
+                                        <span th:text="${todo.description}"></span>
+                                        <span>
+                                        <a  class="btn p-1 " data-toggle="modal" th:data-target="'#todoModal'+${todo.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0,0,300,150"
+                                                 style="fill:#151546;">
+                                                <g fill="#151546" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(10.66667,10.66667)"><path d="M18.41406,2c-0.256,0 -0.51203,0.09797 -0.70703,0.29297l-2,2l-1.41406,1.41406l-11.29297,11.29297v4h4l14.70703,-14.70703c0.391,-0.391 0.391,-1.02406 0,-1.41406l-2.58594,-2.58594c-0.195,-0.195 -0.45103,-0.29297 -0.70703,-0.29297zM18.41406,4.41406l1.17188,1.17188l-1.29297,1.29297l-1.17187,-1.17187zM15.70703,7.12109l1.17188,1.17188l-10.70703,10.70703h-1.17187v-1.17187z"></path></g></g>
+                                            </svg>
+                                        </a>
+                                            </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            </div>
+                            <div aria-labelledby="security-tab" class="tab-pane fade" id="security" role="tabpanel">
+                                <div th:each="todo : ${todoList}" th:if="${todo.completed}">
+                                        <h5 th:text="${todo.title}"></h5>
+                                        <p th:text="${todo.description}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Update and Delete Modals -->
+<div th:each="todo : ${todoList}" th:id="'todoModal'+${todo.id}" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Todo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form th:action="@{/edit-todo}" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="id" th:value="${todo.id}">
+                    <div class="form-group">
+                        <label for="updatedTitle">Title:</label>
+                        <input type="text" class="form-control" id="updatedTitle" name="updatedTitle" th:value="${todo.title}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="updatedDescription">Description:</label>
+                        <textarea class="form-control" id="updatedDescription" name="updatedDescription" required th:text="${todo.description}"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
